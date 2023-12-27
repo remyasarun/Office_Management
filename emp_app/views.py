@@ -27,6 +27,12 @@ def login(request):
         Employee(request, Email=email, password=pass1).save()
 
     return render(request, 'login.html')
+def Logout(request):
+    try:
+        del request.session['email']
+    except:
+        pass
+    return redirect('home.html')
 
 def index(request):
 
