@@ -1,14 +1,40 @@
-from django.shortcuts import render, HttpResponse
+from django.contrib import auth, messages
+from django.contrib.auth import authenticate,login
+from django.shortcuts import render, HttpResponse, redirect
 from .models import Employee
 
 # Create your views here.
+def home(request):
+    return render(request, 'home.html')
+def register(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        pass1 = request.POST.get('pass1')
+        pass2 = request.get('pass2')
+        if Employee.objects.filter(Email=email).exist():
+            messages.info(request," mail id already exist")
+            return redirect('register.html')
+
+        elif pass1 == pass2:
+            Employee(Email=email, password=pass1).save()
+            return redirect('/')
+
+    return render(request, 'register.html')
+def login(request):
+    if request.method =='POST':
+        email = request.POST.get('email')
+        pass1 = request.POST.get('pass1')
+        Employee(request, Email=email, password=pass1).save()
+
+    return render(request, 'login.html')
+
 def index(request):
 
     return render(request, 'index.html')
 
 def all_emp(request):
     emps = Employee.objects.all()
-    context={
+    context = {
         'emps': emps
     }
     print(context)
@@ -26,6 +52,7 @@ def add_emp(request):
         phone = request.POST.get('phone')
         date = request.POST.get('date')
         Employee(First_name=first, Last_name=last, Dept=dept, Salary=salary, Role=role, phone=phone, hire_date=date).save()
+
         return HttpResponse(" EMPLOYEE DETAILS ADDED SUCCESSFULLY")
     elif request.method =='GET':
         return render(request, 'add_emp.html')

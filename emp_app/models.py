@@ -3,6 +3,8 @@ from django.db import models
 # Create your models here.
 
 class Employee(models.Model):
+    Email = models.EmailField(max_length=25)
+    password = models.CharField(max_length=10)
     First_name = models.CharField(max_length=10)
     Last_name = models.CharField(max_length=10)
     Dept = models.CharField(max_length=10)
@@ -15,3 +17,7 @@ class Employee(models.Model):
 
     class Meta:
         db_table = "office"
+
+    @classmethod
+    def set_password(cls, pass1):
+        pass
